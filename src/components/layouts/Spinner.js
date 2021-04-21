@@ -19,7 +19,7 @@ const Spinner = () => {
 
   return (
     <div className={classes.root}>
-      <CircularProgress />
+      <CircularProgress style={{ color: "#21243d" }} />
     </div>
   );
 };

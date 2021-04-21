@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import TopStory from "./TopStory";
 import Spinner from "./layouts/Spinner";
 import Grid from "@material-ui/core/Grid";
@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -23,11 +24,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TopStories({ loading, topStories, getTopArticles }) {
+function TopStories() {
   const classes = useStyles();
+  const [value, setValue] = useState("world");
+  const [topStories, setTopStories] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    getTopArticles("world");
-  }, []);
+    const getTopArticles = async (section) => {
+      setLoading(true);
+      const res = await axios.get(
+        `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${process.env.REACT_APP_NYTIMES_API_KEY}`
+      );
+      setTopStories(res.data.results);
+      setLoading(false);
+    };
+    getTopArticles(value);
+  }, [value]);
 
   return (
     <>
@@ -38,7 +50,7 @@ function TopStories({ loading, topStories, getTopArticles }) {
           <div className={classes.buttons}>
             <Button
               onClick={() => {
-                getTopArticles("world");
+                setValue("world");
               }}
               variant="outlined"
               color="primary"
@@ -47,7 +59,7 @@ function TopStories({ loading, topStories, getTopArticles }) {
             </Button>
             <Button
               onClick={() => {
-                getTopArticles("politics");
+                setValue("politics");
               }}
               variant="outlined"
               color="primary"
@@ -57,7 +69,7 @@ function TopStories({ loading, topStories, getTopArticles }) {
 
             <Button
               onClick={() => {
-                getTopArticles("technology");
+                setValue("technology");
               }}
               variant="outlined"
               color="secondary"
@@ -66,7 +78,7 @@ function TopStories({ loading, topStories, getTopArticles }) {
             </Button>
             <Button
               onClick={() => {
-                getTopArticles("us");
+                setValue("us");
               }}
               variant="outlined"
               color="default"
@@ -75,7 +87,7 @@ function TopStories({ loading, topStories, getTopArticles }) {
             </Button>
             <Button
               onClick={() => {
-                getTopArticles("science");
+                setValue("science");
               }}
               variant="outlined"
               color="secondary"
@@ -84,7 +96,7 @@ function TopStories({ loading, topStories, getTopArticles }) {
             </Button>
             <Button
               onClick={() => {
-                getTopArticles("business");
+                setValue("business");
               }}
               variant="outlined"
               color="default"

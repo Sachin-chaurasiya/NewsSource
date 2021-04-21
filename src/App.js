@@ -14,8 +14,6 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [articles, setArticles] = useState([]);
 
-  const [topStories, setTopStories] = useState([]);
-
   useEffect(() => {
     const getArticles = async () => {
       setLoading(true);
@@ -35,15 +33,6 @@ const App = () => {
       `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${text}&api-key=${process.env.REACT_APP_NYTIMES_API_KEY}`
     );
     setArticles(res.data.response.docs);
-    setLoading(false);
-  };
-
-  const getTopArticles = async (section) => {
-    setLoading(true);
-    const res = await axios.get(
-      `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${process.env.REACT_APP_NYTIMES_API_KEY}`
-    );
-    setTopStories(res.data.results);
     setLoading(false);
   };
 
@@ -82,11 +71,7 @@ const App = () => {
               path="/topstories"
               render={() => (
                 <>
-                  <TopStories
-                    loading={loading}
-                    topStories={topStories}
-                    getTopArticles={getTopArticles}
-                  />
+                  <TopStories />
                 </>
               )}
             />
